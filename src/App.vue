@@ -27,7 +27,7 @@
         </ol>
       </div>
 
-      <form @submit.prevent="login">
+      <form id="myForm">
         <HiddenInput v-model="accessKey" label="Access Key" />
         <HiddenInput v-model="accessSecretKey" label="Access Secret Key" />
       </form>
@@ -161,7 +161,7 @@ const invokeFlow = async (): Promise<string> => {
     console.error(error);
   }
 
-  let jsonObj = {};
+  let jsonObj: JSONObj = { Error: '' };
 
   try {
     if (chartInput) {
