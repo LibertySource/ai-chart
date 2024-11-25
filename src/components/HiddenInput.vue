@@ -2,7 +2,7 @@
   <div class="mb-4 relative">
     <label :for="id" class="block mb-2">{{ label }}</label>
     <input :type="inputType" :id="id" :placeholder="`Enter ${label}`" class="mt-1 p-2 w-full border rounded-md pr-10"
-      :value="modelValue" @input="updateModelValue">
+      :value="modelValue" @input="updateModelValue"autocomplete="none">
     <button type="button" @click="toggleVisibility"
       class="absolute inset-y-0 right-0 flex items-center px-3 focus:outline-none">
       <img class="toggleVisibility" :src="visibilityIcon" :alt="inputType === 'password' ? 'Show' : 'Hide'">

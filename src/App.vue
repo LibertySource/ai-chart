@@ -10,9 +10,11 @@
       <div class="mb-6">
         <p>
           <span class="font-bold">References</span>:
-          <a class="text-blue-500 underline" href="https://www.chartjs.org/docs/latest/api/" target="_blank">Chart.js</a>
-           and 
-          <a class="text-blue-500 underline" href="https://github.com/LibertySource/ai-chart" target="_blank">GitHub Repo</a>.
+          <a class="text-blue-500 underline" href="https://www.chartjs.org/docs/latest/api/"
+            target="_blank">Chart.js</a>
+          and
+          <a class="text-blue-500 underline" href="https://github.com/LibertySource/ai-chart" target="_blank">GitHub
+            Repo</a>.
         </p>
       </div>
       <div class="bg-gray-100 p-4 rounded-lg shadow-sm mb-6 border border-gray-200">
@@ -25,14 +27,17 @@
         </ol>
       </div>
 
-      <HiddenInput v-model="accessKey" label="Access Key" />
-      <HiddenInput v-model="accessSecretKey" label="Access Secret Key" />
+      <form @submit.prevent="login">
+        <HiddenInput v-model="accessKey" label="Access Key" />
+        <HiddenInput v-model="accessSecretKey" label="Access Secret Key" />
+      </form>
 
       <div class="mb-4">
         <label for="samplePrompts" class="block mb-2">Sample Prompts</label>
         <select id="samplePrompts" class="w-full p-2 border rounded" v-model="selectedSample" @change="updateJsonInput">
           <option value="">Select a sample</option>
-          <option v-for="(sample, index) in samplePrompts" :key="index" :value="sample.value">{{ sample.title }}</option>
+          <option v-for="(sample, index) in samplePrompts" :key="index" :value="sample.value">{{ sample.title }}
+          </option>
         </select>
       </div>
       <div class="mb-4">
@@ -72,7 +77,7 @@ onMounted(() => {
 
   accessKey.value = urlParams.get('accessKey') || localStorage.getItem("accessKey") || '';
   accessSecretKey.value = urlParams.get('accessSecretKey') || localStorage.getItem("accessSecretKey") || '';
-  prompt.value = localStorage.getItem("prompt") || '';
+  prompt.value = urlParams.get('prompt') || localStorage.getItem("prompt") || '';
 });
 
 const updateJsonInput = () => {
@@ -93,7 +98,9 @@ const generateChart = async () => {
   let chartInput = "";
   try {
     chartInput = await invokeFlow();
-    renderChart(chartInput);
+    if (chartInput) {
+      renderChart(chartInput);
+    }
   } catch (error) {
     console.error(`AI Response: '${chartInput}'`);
     console.error("Error generating chart:", error);
@@ -104,6 +111,7 @@ const generateChart = async () => {
 };
 
 const invokeFlow = async (): Promise<string> => {
+  console.log(`Prompt = '${prompt.value}'`)
   const inputs = [
     {
       content: { document: prompt.value },
@@ -139,7 +147,7 @@ const invokeFlow = async (): Promise<string> => {
         if (flowOutputEvent) {
           flowResponse = { ...flowResponse, ...flowOutputEvent };
           chartInput = flowResponse?.content?.document;
-          console.log(`Chart Input = '${chartInput}'`);
+          console.log(`AI Response = '${chartInput}'`);
         } else if (flowCompletionEvent) {
           if (flowCompletionEvent.completionReason == 'SUCCESS') {
             console.log(`flowCompletionEvent: Success`);
@@ -151,6 +159,24 @@ const invokeFlow = async (): Promise<string> => {
     }
   } catch (error) {
     console.error(error);
+  }
+
+  let jsonObj = {};
+
+  try {
+    if (chartInput) {
+      jsonObj = JSON.parse(chartInput);
+      if (jsonObj && jsonObj.Error) {
+        Swal.fire("Error", jsonObj.Error, "error");
+        chartInput = "";
+      }
+    } else {
+      Swal.fire("Error", "No response from AI", "error");
+    }
+  } catch (error) {
+    console.error(error);
+    Swal.fire("Error", "Failed to generate chart. Check the console for more details", "error");
+    chartInput = "";
   }
 
   return (chartInput);
