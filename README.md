@@ -136,4 +136,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 Jeff Holst - jeff@libertysource.com
 
 Project Link:
-[https://github.com/LibertySource/ai-pie-chart-generator](https://github.com/LibertySource/ai-chart)
+[https://github.com/LibertySource/ai-chart](https://github.com/LibertySource/ai-chart)
