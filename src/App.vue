@@ -3,11 +3,12 @@
     <div id="loadingOverlay" class="modal-overlay" v-show="loading">
       <div class="spinner"></div>
     </div>
-    <div class="container mx-auto max-w-3xl p-6">
-      <header class="bg-ice-blue p-6 rounded-lg mb-6">
-        <h1 class="text-2xl font-bold">AI Chart v.{{ appVersion }}</h1>
-      </header>
+    <div class="container mx-auto max-w-3xl p-1">
+      <img src="./assets/HES_logo.png"/>
+    </div>
+    <div class="container mx-auto max-w-3xl p-1">
       <div class="mb-6">
+        <h1 class="text-2xl font-bold">AI Chart v.{{ appVersion }}</h1>
         <p>
           <span class="font-bold">References</span>:
           <a class="text-blue-500 underline" href="https://www.chartjs.org/docs/latest/api/"
